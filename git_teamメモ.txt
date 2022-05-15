@@ -1,0 +1,69 @@
+変更のプルリク:
+変更点をadd
+$ git add -A
+
+コミット
+$ git commit -m "[Addなど] 変更内容"
+
+push
+$ git push origin ブランチ名
+
+githubを開く
+pull requestsを開く
+baseをdevelopを選択、compareに自分のブランチ名を選択
+create pull request
+writeに詳細編集内容を記入し、create pull requestsで送信
+
+他のチームメンバーにプルリクしたことを伝え、マージンしてもらう
+
+
+マージンの仕方:
+pull requests
+
+コミット名を押す
+
+writeに確認コメントを残し、merge pull request
+
+
+最新の状態をローカルに反映:
+統合ブランチに移動
+$ git checkout develop
+
+反映
+$ git pull origin develop
+
+自分のブランチにも反映
+$ git checkout 自分のブランチ名
+$ git merge origin/develop
+
+反映状態をpush
+$ git push origin 自分のブランチ名
+
+
+メッセージ一例
+Start:開始
+Finish:終了
+Add:追加
+Remove:削除
+Fix:編集
+Update:追加編集
+
+
+git hub から参加する:
+environmentにいることを確認
+
+ファイルをコピー
+$ git clone SSH URL
+
+統合ブランチ反映
+$ cd アプリ名
+$ git checkout -b develop
+$ git pull origin develop
+
+developにいるか確認
+$ git branch
+
+トピックブランチ作成
+$ git checkout -b ブランチ名(feature-名前 など)
+$ git commit --allow-empty -m "first commit"
+$ git push origin ブランチ名

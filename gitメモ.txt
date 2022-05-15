@@ -1,0 +1,33 @@
+GitHubアップロード方法:
+$ git add 変更したフォルダ又はファイル名
+↓
+$ git commit -m "[Startなど] チャプター数-各章の番号"
+例:$ git commit -m "[Finish] 1-2"
+↓
+$ git push origin ブランチ名(mainなど)
+完了(GitHubにて要確認)
+
+
+メッセージ一例
+Start:開始
+Finish:終了
+Add:追加
+Remove:削除
+Fix:編集
+Update:追加編集
+
+
+新規作成方法:
+$ cd リンク名
+を使って任意のフォルダに移動
+
+$ git init
+を実行
+
+GitHubにログインし、repositoryを作成
++ボタン→New repository→Repository nameにフォルダの名前を入力→Create repository
+SSHを選択し、隣に出たURLをコピー
+
+$ git remote add origin コピーしたURL
+を実行($ git remote -v で確認)
+

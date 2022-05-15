@@ -1,0 +1,131 @@
+新規作成方法:
+作成前に
+$ pwd
+で初期位置にいるか確認すること
+
+アプリのテンプレートを生成する
+$ rails new アプリ名
+
+生成したアプリフォルダに移動
+$ cd アプリ名
+
+一度サーバーを起動
+$ rails s
+
+Preview→Preview Running Applicatinでブラウザを開き、エラー文の中のconfig.hosts <<"~省略~.amazonaws.com"をコピーする
+アプリフォルダ内のconfig/environments/development.rbを開き、一番下のend直前にペーストする
+
+しばらく使わないのでサーバーを閉じる
+ターミナルを開いてからCtrl + C
+
+
+モデル作成方法:
+$ rails g model モデル名 (カラム名)
+例:$ rails g model List title:string comment:text
+
+テーブルの作成
+$ rails db:migrate
+
+後からカラムを追加する場合(テーブル名=モデル名の複数形)
+$ rails g migration Addカラム名Toテーブル名 カラム名:型名
+例:$ rails g migration AddTitleToLists title:string
+削除方法:$ rails g migration Removeカラム名Fromテーブル名 カラム名:型名
+
+実行後
+$ rails db:migrate
+を忘れずに行う
+
+
+コントローラーの作成方法:
+homesコントローラーの作成(それぞれの名称は任意)
+$ rails g controller homes top
+
+config/routes.rbファイルを開く
+/homes/topではなく/topで飛べるようにする場合
+　get 'homes/top' を get '/top' => "homes#top"に書き換える
+/で飛べるようにする場合
+　root to: "homes#top"に書き換える
+
+listコントローラーの作成
+$ rails g controller lists new index show edit
+new,index,show,editが追加されたか要確認
+
+後からアクションを追加する場合(例:homes)
+app/controllers/homes_controller.rbを開き、
+  def about
+  end
+を追加する
+config/routes.rbを開き、
+  get 'homes/about' => 'homes#about', as: 'about'
+を追加
+app/views/homesフォルダ内にabout.html.erbを追加する
+
+
+画像をデータベース上に保存できるようにする方法:
+ActiveStorageをインストール
+$ rails active_storage:install
+
+migrateする
+$ rails db:migrate
+
+gemfileを開き、以下のコードのコメントアウトを外す
+  gem 'image_processing', '~>1.2'
+
+インストール
+$ bundle install
+
+config/environments/development.rbを開き中央の自由なところに
+  config.active_job.queue_adapter = :inline
+を追加
+
+画像を扱うモデルに(app/models/list.rbなど)
+  has_one_attached :image
+を追加
+
+
+ユーザー認証機能導入方法(devise):
+gemfileを開き、一番下の方に
+  gem 'devise'
+を追加
+
+インストールする(準備)
+$ bundle install
+
+改めてインストールする
+$ rails g devise:install
+
+Userモデルの追加(名称は任意)
+$ rails g devise User
+
+db/migrate/作成日時_devise_create_users.rbを開く
+デフォルトではログイン機能にメールアドレスとパスワードだけしかないので必要に応じてユーザー名などを追加する
+ユーザー名を追加する場合t.timestamps null: falseの直前に
+  t.string :name
+を追加する
+
+テーブルを作成する
+$ rails db:migrate
+
+編集用のviewファイルを作成する
+$ rails g devise:views
+
+app/views/devise/registration/new.html.erbなどのファイルを開き、お好みで追加、編集する
+例:名前記入欄の追加
+　<%= f.label :name %><br>
+  <%= f.text_field :name %>
+
+app/controllers/application_controller.rbを開く
+このままだとユーザー名を入力しても保存されないため以下をコントローラファイル内に追加する
+  before_action :configure_permitted_parameters, if:   :devise_controller?
+
+  protected
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:name])
+  end
+を追加する
+
+ログアウトへのリンクを作る(例:header)
+ <%= link_to "ログアウト", destroy_user_session_path, method: :delete %>
+
+
